@@ -1,17 +1,13 @@
-is_cn: true
+is_cn: false
 ssh_keys: ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAsjetASu5nvh6V8ozx7lsSLnPGAikYLtUDUt0GnK9+SxM8MVCwHqam4tgJcVAGfIRAtrxzTgJcUnBeXafe4OkaPJyyXNmnvzQDsopExibNopgPx9RgzlNolLeY8mKgaIKIHPiSumA9PPAm1QfGV8c8Uo9KBNXje4FDPsHxfbD/C9gqL5UcAJl9aFyK/uUwTxD2GZWB1YBMIsMJW4HwuMssCGnx1CMqro+rZX3Wev3MmP8/+yRwOr3kTNFXRJd7h5V+y7S1i+gztU2YuYOLqsxmGbcP/VdI/o5cdBv4s6pobEGAQfPqUs05x152Kqy9xkOlNjnMvfjln1w6PSDHhj8Gw== zhouxiaochen
 pkgs:
-  - python3
-  - libldap2-dev
-  - libsasl2-dev
-  - slapd
-  - ldap-utils
+  - openssh-server
   - mysql-server
-  - libmysqlclient-dev
-
-galaxy:
+  - redis-server
 
 services:
   - ssh
   - mysql
   - redis-server
+
+galaxy:

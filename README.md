@@ -1,4 +1,4 @@
-# 启动WSL服务计划任务
+# 启动WSL服务计划任务(ubuntu)
 
 本文使用开启开发者模式的`Windows 20H2`版本，基于`WSL2`, 支持在`Windows`启动时启动`WSL`中的`Linux`服务或者执行命令. 没仔细测试, 可能存在bug.
 
@@ -15,19 +15,29 @@
 3. 添加`ssh-key`到`root`用户.
 4. 增加`wslip`环境变量,方便`windows`下登录`wsl`: `ssh -i \path\to\id_rsa root@$Env:wslip`.
 
+*DOING*
+1. 通过`ansible-galaxy`部署软件.
+
+*TODO*
+1. 针对中国环境,修改一些访问慢的源(例如: apt, pip).
 
 ## 安装及使用
 
+1. `git clone https://github.com/opszhou/wsl-scheduled-task`
+2. 修改在`config.yml`文件`pkgs`变量, 定义要安装的软件包, 中写要开机启动的`WSL`服务或者执行的命令即可.
+3. 进到`C:\wsl-scheduled-task`双击`main.bat`运行脚本添加任务计划.
+4. 启动后，通过`powershell`命令`$Env:wslip`获取`wsl2 ip`地址.
+5. `ssh -i \path\to\id_rsa <user>@$Env:wslip`登录`wsl`.
 
-* 使用`git clone`到`C:\wsl-scheduled-task`
-``` bash
-git clone https://github.com/opszhou/wsl-scheduled-task
+## 配置文件说明
+
 ```
-
-1. 进到`C:\wsl-scheduled-task`双击`main.bat`运行脚本添加任务计划.
-2. 在`services.sh`写要开机启动的`WSL`服务或者执行的命令即可.
-3. 启动后，通过`powershell`命令`$Env:wslip`获取`wsl2 ip`地址
-4. `ssh -i \path\to\id_rsa <user>@$Env:wslip`登录`wsl`
+is_cn: # 用来判断是否中国境内,功能待完善.
+ssh_keys: # `sshkey`只支持一个(毕竟定位是个人的开发环境).
+pkgs: # ubuntu软件包名.
+services: # ubuntu软件包对应的服务名.
+galaxy: # ansible-galaxy, 功能待完善.
+```
 
 ## 引用与参考
 
