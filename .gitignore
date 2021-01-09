@@ -1,0 +1,13 @@
+### PowerShell ###
+# Exclude packaged modules
+*.zip
+
+# Exclude .NET assemblies from source
+*.dll
+
+# Log
+*.log
+# Temp
+*.tmp
+# 排除vscode
+.vscode
