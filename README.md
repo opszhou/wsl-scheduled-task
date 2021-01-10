@@ -16,10 +16,10 @@
 4. 增加`wslip`环境变量,方便`windows`下登录`wsl`: `ssh -i \path\to\id_rsa root@$Env:wslip`.
 
 *DOING*
-1. 通过`ansible-galaxy`部署软件.
+~~1. 通过`ansible-galaxy`部署软件.~~
 
 *TODO*
-1. 针对中国环境,修改一些访问慢的源(例如: apt, pip).
+~~1. 针对中国环境,修改一些访问慢的源(例如: apt, pip).~~
 
 ## 安装及使用
 

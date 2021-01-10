@@ -5,9 +5,11 @@ pkgs:
   - mysql-server
   - redis-server
 
+galaxy:
+  - nginxinc.nginx
+
 services:
   - ssh
   - mysql
   - redis-server
-
-galaxy:
+  - nginx

@@ -27,6 +27,27 @@ echo_msg info "conf_pkgs: ${#conf_pkgs[@]}"
 echo_msg info "conf_galaxy: ${#conf_galaxy[@]}"
 echo_msg info "conf_services: ${#conf_services[@]}"
 
+# cn settings
+function cn_init() {
+    if [ "${#conf_is_cn[@]}" -ne "true" ];then
+        echo_msg info "[cn_init] pass."
+        return
+    fi
+    if [ ! -f "/etc/pip.conf" ];then
+
+    cat > /etc/pip.conf << EOF
+[global]
+index-url = https://mirrors.aliyun.com/pypi/simple/
+
+[install]
+trusted-host=mirrors.aliyun.com
+EOF
+    echo_msg info "[cn_init] add aliyun pypi success."
+    fi
+    sed -i 's+archive.ubuntu.com+mirrors.aliyun.com+g' /etc/apt/sources.list
+    echo_msg info "[cn_init] change apt sources to aliyun success."
+}
+
 # Add ssh keys
 function add_ssh_keys() {
     if [ "${#conf_ssh_keys[@]}" -eq 0 ];then
@@ -63,9 +84,19 @@ function install_ansible_roles() {
     fi
     roles=${conf_galaxy[@]}
     for role in ${roles}; do
-        ansible-galaxy collection install ${role} > /dev/null 2>&1
+        echo_msg info "[install_ansible_roles:${role}]..."
+        ansible-galaxy install ${role}
+        cat > /tmp/${role}.yml << EOF
+---
+- hosts: localhost
+  remote_user: root
+  gather_subset: min
+  roles:
+    - "${role}"
+EOF
+        ansible-playbook /tmp/${role}.yml
         if [ "$?" -ne 0 ];then
-            echo_msg warn "[${role}] collection install failed!!!"
+            echo_msg warn "[${role}] install failed!!!"
         fi
     done
 }
@@ -86,6 +117,7 @@ function start_services() {
     done
 }
 
+cn_init
 add_ssh_keys
 install_pkgs
 install_ansible_roles
