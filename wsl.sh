@@ -17,7 +17,7 @@ if [ -f "${ROOT_DIR}/utils.sh" ]; then
     source "${ROOT_DIR}/utils.sh"
     echo_msg info "load [utils.sh]..."
 else
-    echo_msg error "加载函数失败"
+    echo_msg error "load [utils.sh] failed"
     exit 1
 fi
 echo_msg info "parsing ${CONFILE}."
