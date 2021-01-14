@@ -75,7 +75,10 @@ function install_pkgs() {
     fi
     pkgs=${conf_pkgs[@]}
     echo_msg info "[install_pkgs]: ${pkgs}"
-    apt install -y ${pkgs} > /dev/null 2>&1
+    apt update -y
+    for pkg in ${pkgs}; do
+        apt install -y ${pkg}
+    done
 }
 
 # ansible roles ${conf_galaxy[@]}
