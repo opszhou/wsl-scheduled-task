@@ -17,7 +17,7 @@ if [ -f "${ROOT_DIR}/utils.sh" ]; then
     source "${ROOT_DIR}/utils.sh"
     echo_msg info "load [utils.sh]..."
 else
-    echo_msg error "load [utils.sh] failed"
+    echo_msg error "load [utils.sh] failed!!!"
     exit 1
 fi
 echo_msg info "parsing ${CONFILE}."
@@ -44,7 +44,8 @@ trusted-host=mirrors.aliyun.com
 EOF
     echo_msg info "[cn_init] add aliyun pypi success."
     fi
-    sed -i 's+archive.ubuntu.com+mirrors.aliyun.com+g' /etc/apt/sources.list
+    sed -i 's+archive.ubuntu.com+mirrors.aliyun.com+g' /etc/apt/sources.list &&
+    apt update -y &&
     echo_msg info "[cn_init] change apt sources to aliyun success."
 }
 
@@ -73,6 +74,7 @@ function install_pkgs() {
         return
     fi
     pkgs=${conf_pkgs[@]}
+    echo_msg info "[install_pkgs]: ${pkgs}"
     apt install -y ${pkgs} > /dev/null 2>&1
 }
 
@@ -83,6 +85,7 @@ function install_ansible_roles() {
         return
     fi
     roles=${conf_galaxy[@]}
+    echo_msg info "[install_ansible_roles]: ${roles}"
     for role in ${roles}; do
         echo_msg info "[install_ansible_roles:${role}]..."
         ansible-galaxy install ${role}
@@ -90,7 +93,6 @@ function install_ansible_roles() {
 ---
 - hosts: localhost
   remote_user: root
-  gather_subset: min
   roles:
     - "${role}"
 EOF
