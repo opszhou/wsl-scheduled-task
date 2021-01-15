@@ -113,7 +113,7 @@ function start_services() {
         return
     fi
     for service in ${conf_services[@]}; do
-        if [ "$service" -eq "ssh" ];then
+        if [ "${service}" -eq "ssh" ];then
             if [ ! -f "/etc/ssh/ssh_host_dsa_key" ];then
                 yes | ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key -q -N ""
             fi
