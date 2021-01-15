@@ -49,6 +49,11 @@ EOF
     echo_msg info "[cn_init] change apt sources to aliyun success."
 }
 
+function sys_init() {
+    sed -i '/xterm-color) color_prompt=yes;;/c\xterm-color|*-256color) color_prompt=yes;;' ~/.bashrc
+    grep ';then cd; fi' ~/.bashrc || echo 'if [[ "${PWD}" == *"/mnt/"* ]];then cd; fi' >> ~/.bashrc
+}
+
 # Add ssh keys
 function add_ssh_keys() {
     if [ "${#conf_ssh_keys[@]}" -eq 0 ];then
@@ -131,6 +136,7 @@ function start_services() {
 }
 
 cn_init
+sys_init
 add_ssh_keys
 install_pkgs
 install_ansible_roles
