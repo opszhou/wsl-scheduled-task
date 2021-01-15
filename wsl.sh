@@ -13,7 +13,7 @@ function echo_msg(){
     esac
 }
 
-if [ -f "${ROOT_DIR}/utils.sh" ]; then
+if [[ -f ${ROOT_DIR}/utils.sh ]]; then
     source "${ROOT_DIR}/utils.sh"
     echo_msg info "load [utils.sh]..."
 else
@@ -29,11 +29,11 @@ echo_msg info "conf_services: ${#conf_services[@]}"
 
 # cn settings
 function cn_init() {
-    if [ "${#conf_is_cn[@]}" -ne "true" ];then
+    if [[ ${#conf_is_cn[@]} -ne true ]];then
         echo_msg info "[cn_init] pass."
         return
     fi
-    if [ ! -f "/etc/pip.conf" ];then
+    if [[ ! -f "/etc/pip.conf" ]];then
 
     cat > /etc/pip.conf << EOF
 [global]
@@ -56,7 +56,7 @@ function sys_init() {
 
 # Add ssh keys
 function add_ssh_keys() {
-    if [ "${#conf_ssh_keys[@]}" -eq 0 ];then
+    if [[ ${#conf_ssh_keys[@]} -eq 0 ]];then
         echo_msg info "[add_ssh_keys] pass."
         return
     fi
@@ -66,7 +66,7 @@ function add_ssh_keys() {
         echo ${ssh_key} > ~/.ssh/authorized_keys &&
         chmod 600 ~/.ssh/authorized_keys &&
         echo_msg info "[add_ssh_keys] success."
-        if [ "$?" -ne 0 ];then
+        if [[ $? -ne 0 ]];then
             echo_msg warn "[add_ssh_keys] failed!!!"
         fi
     done
@@ -74,21 +74,21 @@ function add_ssh_keys() {
 
 # Install pkgs ${conf_pkgs[@]}
 function install_pkgs() {
-    if [ "${#conf_pkgs[@]}" -eq 0 ];then
+    if [[ ${#conf_pkgs[@]} -eq 0 ]];then
         echo_msg info "[install_pkgs] pass."
         return
     fi
     pkgs=${conf_pkgs[@]}
     echo_msg info "[install_pkgs]: ${pkgs}"
-    apt update -y
+    apt-get update -yq
     for pkg in ${pkgs}; do
-        apt install -y ${pkg}
+        apt-get install -yq ${pkg}
     done
 }
 
 # ansible roles ${conf_galaxy[@]}
 function install_ansible_roles() {
-    if [ ${#conf_galaxy[@]} -eq 0 ];then
+    if [[ ${#conf_galaxy[@]} -eq 0 ]];then
         echo_msg info "[install_ansible_roles] pass."
         return
     fi
@@ -105,7 +105,7 @@ function install_ansible_roles() {
     - "${role}"
 EOF
         ansible-playbook /tmp/${role}.yml
-        if [ "$?" -ne 0 ];then
+        if [[ $? -ne 0 ]];then
             echo_msg warn "[${role}] install failed!!!"
         fi
     done
@@ -113,23 +113,25 @@ EOF
 
 # start services ${#conf_services[@]}
 function start_services() {
-    if [ "${#conf_services[@]}" -eq 0 ];then
+    if [[ ${#conf_services[@]} -eq 0 ]];then
         echo_msg info "[start_services] pass."
         return
     fi
     for service in ${conf_services[@]}; do
-        if [ "${service}" -eq "ssh" ];then
-            if [ ! -f "/etc/ssh/ssh_host_dsa_key" ];then
+        if [[ ${service} -eq ssh ]];then
+            if [[ ! -f /etc/ssh/ssh_host_dsa_key ]];then
                 yes | ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key -q -N ""
+                echo_msg info "[start_services] add ssh_host_dsa_key success."
             fi
-            if [ ! -f "/etc/ssh/ssh_host_rsa_key" ];then
+            if [[ ! -f /etc/ssh/ssh_host_rsa_key ]];then
                 yes | ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -q -N ""
+                echo_msg info "[start_services] add ssh_host_rsa_key success."
             fi
         fi
         echo_msg info  "[${service}] starting..."
         sleep 0.1
         /etc/init.d/${service} start
-        if [ "$?" -ne 0 ];then
+        if [[ $? -ne 0 ]];then
             echo_msg warn "[${service}] start failed!!!"
         fi
     done
