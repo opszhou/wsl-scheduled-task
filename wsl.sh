@@ -114,8 +114,12 @@ function start_services() {
     fi
     for service in ${conf_services[@]}; do
         if [ "$service" -eq "ssh" ];then
-            yes | ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key -q -N ""
-            yes | ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -q -N ""
+            if [ ! -f "/etc/ssh/ssh_host_dsa_key" ];then
+                yes | ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key -q -N ""
+            fi
+            if [ ! -f "/etc/ssh/ssh_host_rsa_key" ];then
+                yes | ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -q -N ""
+            fi
         fi
         echo_msg info  "[${service}] starting..."
         sleep 0.1
